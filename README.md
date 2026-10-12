@@ -130,7 +130,7 @@ All keys live in `config.local.psd1`. `config.example.psd1` documents each one w
 
 - The kit is a working tool, not a product. The UI prompts and most comments are in French. Yes/no prompts accept `o/oui/y/yes`.
 - It is interactive by design: names, passwords and confirmations are typed at the console. It is not a replacement for Autopilot or for Intune policy.
-- It targets Windows 11 Pro with Windows PowerShell 5.1 and has no automated tests. This anonymised, config-driven version has not yet been run end to end on Windows. Run it on a test machine first.
+- It targets Windows 11 Pro with Windows PowerShell 5.1 and has no automated tests. This anonymised, config-driven version has been checked statically (every `.ps1` parses with PowerShell 7.6, both config files load with `Import-PowerShellDataFile`) but has not yet been run end to end on a fresh Windows machine. Run it on a test machine first.
 - Printer driver staging expects an unpacked vendor driver package (INF files) in `offline\printers\`, named in the config. Only one driver family is handled per kit.
 - Logs and reports contain machine and user data, including part of `dsregcmd /status` output. If the local-account step generates a password, it is shown once on screen. Keep the report folder and the stick under the same care as any other personal data. Never commit `reports\` or `config.local.psd1`; `.gitignore` excludes both.
 - Offline installers are not included. Their licences are the operator's responsibility.
