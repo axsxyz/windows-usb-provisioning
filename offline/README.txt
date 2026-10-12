@@ -12,8 +12,9 @@ Search order used by deploy-apps.ps1:
 
 A folder only counts if it contains one of the OfflineMarkers from the config.
 
-What can go here (all optional; the script falls back to winget or a direct
-download when an item is missing):
+What can go here (the preflight treats the Office Deployment Tool and the
+business-app folders declared in the config as critical; for the other items
+the script falls back to winget or a direct download when they are missing):
   - AnyDesk.exe                       remote support client
   - officedeploymenttool.exe / odt.exe  Office Deployment Tool (Microsoft 365 Apps)
   - Ninite bundle                     file name from NiniteFileNames

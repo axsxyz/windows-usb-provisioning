@@ -38,7 +38,7 @@
 
     # --- Network resources ----------------------------------------------------
     NetworkDrives    = @(
-        # @{ Letter = 'S'; Path = '\\fileserver.contoso.example\Shared'; Name = 'Shared' }
+        # @{ Letter = 'S'; Path = '\\fileserver.contoso.example\Shared' }
     )
     Printers         = @(
         # TCP/IP printer (driver staged from offline\printers\ via pnputil):
