@@ -116,7 +116,7 @@ All keys live in `config.local.psd1`. `config.example.psd1` documents each one w
 | `LobApp` | Optional Java business client: folder copy, launcher JAR first run, process kill list, hero matching patterns |
 | `ClickOnceApp` | Optional ClickOnce app: `.appref-ms` names, URL, installed-detection patterns |
 | `PrinterDriverNames`, `PrinterDriverLabel`, `PrinterDriverFolders`, `PrinterInfExcludeDirPattern`, `PrinterInfExcludeNamePattern` | Printer driver package staged from `offline\printers\` with `pnputil` |
-| `CameraClientEnabled` and the other `CameraClient*` keys | Optional camera-client install chain (offline setup or zip, then download URL, then winget), with all names, patterns and IDs in config |
+| `CameraClientEnabled` and the other `CameraClient*` keys | Optional camera-client install chain (offline setup or zip, then archive download URL `CameraClientArchiveUrl`, then winget), with all names, patterns and IDs in config |
 | `FilePrefix` | Prefix for generated files (state JSON, migration manifest, Chrome export copies, temp files) |
 | `WorkFolderName` | Sub-folder name under `%TEMP%`, `%LOCALAPPDATA%` and `%ProgramData%` |
 | `ReportFolderName` | Report folder under Documents |

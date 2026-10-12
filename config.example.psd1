@@ -88,11 +88,11 @@
     #                     ShortcutNames = @('Example Tool.lnk') }
 
     # Optional camera / video-surveillance client chain:
-    # offline setup or zip -> classic download URL -> winget fallback. Leave disabled if unused.
+    # offline setup or zip -> archive download URL -> winget fallback. Leave disabled if unused.
     CameraClientEnabled           = $false
     CameraClientName              = 'Camera Client'           # status label + Start Menu shortcut
-    CameraClientWingetName        = 'Camera Client Lite'      # label of the winget fallback
-    CameraClientWingetId          = ''                        # e.g. 'Vendor.CameraClientLite'
+    CameraClientWingetName        = 'Camera Client (winget)'  # label of the winget fallback
+    CameraClientWingetId          = ''                        # e.g. 'Vendor.CameraClient'
     CameraClientOfflineZip        = ''                        # glob, e.g. 'CameraClient*.zip' (also an offline marker)
     CameraClientOfflineSubdir     = ''                        # optional sub-folder of offline\ holding the setup
     CameraClientFilePattern       = ''                        # regex on setup file names in offline\
@@ -101,8 +101,8 @@
     CameraClientInstalledPaths    = @()                       # paths relative to Program Files, e.g. 'Vendor\Client\Client.exe'
     CameraClientProgramDirPattern = ''                        # regex on Program Files folder names
     CameraClientExeNamePattern    = ''                        # regex on the installed exe name
-    CameraClientClassicUrl        = ''                        # direct download of a zip (optional)
-    CameraClientClassicVersion    = ''
+    CameraClientArchiveUrl        = ''                        # direct download of a zip (optional)
+    CameraClientArchiveVersion    = ''                        # version string, fills {0} in the zip name formats
     CameraClientCacheZipFormat    = ''                        # cached zip name in offline\, {0} = version
     CameraClientDownloadZipFormat = ''                        # downloaded zip name, {0} = version
 }

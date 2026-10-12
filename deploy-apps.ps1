@@ -3079,7 +3079,7 @@ function Test-ProvOfflinePreflight {
             if ($hit) {
                 Write-Status -Name $c.Name -Status OK -Detail $hit.Name -NoCount
             } else {
-                Write-Status -Name $c.Name -Status INFO -Detail "absent offline (URL souvent 403) — winget en fallback" -NoCount
+                Write-Status -Name $c.Name -Status INFO -Detail "absent offline — download / winget en fallback" -NoCount
             }
             continue
         }
@@ -3467,7 +3467,7 @@ function Install-ProvLobApps {
       - PortableApp  : copie d'un dossier portable + raccourci menu Demarrer
       - LobApp       : copie dossier + lance le launcher JAR (raccourci Bureau)
       - ClickOnceApp : application ClickOnce (reseau requis)
-      - Client camera : offline / URL classique / winget (si CameraClientEnabled)
+      - Client camera : offline / URL archive / winget (si CameraClientEnabled)
     #>
     Write-Section -Title "Applications metier (offline)" -Step "4b/8"
     $roots = @(Get-ProvOfflineRoots)
@@ -3608,7 +3608,7 @@ function Install-ProvLobApps {
         }
     }
 
-    # --- Client camera (offline -> URL classique -> winget) ---
+    # --- Client camera (offline -> URL archive -> winget) ---
     if ($ProvConfig.CameraClientEnabled) {
         Install-ProvCameraClient
     }
@@ -3680,12 +3680,12 @@ function Install-ProvCameraClient {
     Client de videosurveillance (optionnel, config CameraClient*). Ordre :
       1) deja installe
       2) offline\ (exe/msi/zip correspondant a CameraClientFilePattern)
-      3) telechargement CameraClientClassicUrl (derniere build classique)
-      4) winget CameraClientWingetId (remplacant officiel)
+      3) telechargement CameraClientArchiveUrl (archive zip)
+      4) winget CameraClientWingetId (paquet winget)
     #>
     $ccName = Get-ProvCameraClientName
-    $ccLite = [string]$ProvConfig.CameraClientWingetName
-    if (-not $ccLite) { $ccLite = "$ccName (winget)" }
+    $ccPkg = [string]$ProvConfig.CameraClientWingetName
+    if (-not $ccPkg) { $ccPkg = "$ccName (winget)" }
     $present = Find-ProvCameraClientExe
     if ($present) {
         Write-Status -Name $ccName -Status SKIP -Detail $present
@@ -3751,11 +3751,11 @@ function Install-ProvCameraClient {
         }
     }
 
-    # --- 3) URL classique ---
-    $url = [string]$ProvConfig.CameraClientClassicUrl
-    $ver = [string]$ProvConfig.CameraClientClassicVersion
+    # --- 3) URL archive ---
+    $url = [string]$ProvConfig.CameraClientArchiveUrl
+    $ver = [string]$ProvConfig.CameraClientArchiveVersion
     if ($url -and -not (Find-ProvCameraClientExe)) {
-        Write-Status -Name $ccName -Status RUN -Detail "DL build classique $ver..." -NoCount
+        Write-Status -Name $ccName -Status RUN -Detail "DL archive $ver..." -NoCount
         $got = $false
         $zipPath = $null
         # Cache zip : TEMP, ou offline USB deja present (ne jamais creer offline\ sur le Bureau)
@@ -3779,7 +3779,7 @@ function Install-ProvCameraClient {
 
         if ($got -and (Test-Path $zipPath) -and ((Get-Item $zipPath).Length -gt 1MB)) {
             try {
-                $extract = Join-Path $work "wiki-extract"
+                $extract = Join-Path $work "archive-extract"
                 if (Test-Path $extract) { Remove-Item $extract -Recurse -Force -EA SilentlyContinue }
                 Write-Status -Name $ccName -Status RUN -Detail "extraction + install silencieuse..." -NoCount
                 Expand-Archive -LiteralPath $zipPath -DestinationPath $extract -Force
@@ -3791,35 +3791,35 @@ function Install-ProvCameraClient {
                 } elseif (Install-ProvCameraClientSetupFile -SetupPath $inner.FullName) {
                     $exe = Find-ProvCameraClientExe
                     New-ProvStartMenuShortcut -Name $ccName -TargetPath $exe | Out-Null
-                    Write-Status -Name $ccName -Status OK -Detail "build classique $ver"
+                    Write-Status -Name $ccName -Status OK -Detail "archive $ver"
                     return
                 } else {
-                    Write-Status -Name $ccName -Status INFO -Detail "install classique non silencieuse / incomplete" -NoCount
+                    Write-Status -Name $ccName -Status INFO -Detail "install archive non silencieuse / incomplete" -NoCount
                 }
             } catch {
                 Write-Status -Name $ccName -Status FAIL -Detail "zip telecharge: $($_.Exception.Message)"
             }
         } else {
-            Write-Status -Name $ccName -Status INFO -Detail "DL build classique impossible (403/reseau) — fallback winget" -NoCount
+            Write-Status -Name $ccName -Status INFO -Detail "DL archive impossible (reseau) — fallback winget" -NoCount
         }
     }
 
-    # --- 4) winget (remplacant officiel) ---
+    # --- 4) winget (paquet) ---
     if (Find-ProvCameraClientExe) { return }
     if (-not $ProvConfig.CameraClientWingetId) {
         Write-Status -Name $ccName -Status FAIL -Detail "offline + URL echoues — placez le zip/exe dans offline\"
         return
     }
-    Write-Status -Name $ccLite -Status INFO -Detail "fallback officiel (winget)" -NoCount
-    $st = Install-WingetApp -Name $ccLite -Id ([string]$ProvConfig.CameraClientWingetId) -Retries 1
+    Write-Status -Name $ccPkg -Status INFO -Detail "fallback winget" -NoCount
+    $st = Install-WingetApp -Name $ccPkg -Id ([string]$ProvConfig.CameraClientWingetId) -Retries 1
     $exe = Find-ProvCameraClientExe
     if ($exe) {
-        New-ProvStartMenuShortcut -Name $ccLite -TargetPath $exe | Out-Null
-        Write-Status -Name $ccLite -Status OK -Detail $exe
+        New-ProvStartMenuShortcut -Name $ccPkg -TargetPath $exe | Out-Null
+        Write-Status -Name $ccPkg -Status OK -Detail $exe
         return
     }
     if ($st -eq "OK" -or $st -eq "SKIP") {
-        Write-Status -Name $ccLite -Status OK -Detail "winget $st (chemin exe non detecte)"
+        Write-Status -Name $ccPkg -Status OK -Detail "winget $st (chemin exe non detecte)"
         return
     }
     Write-Status -Name $ccName -Status FAIL -Detail "URL + winget echoues — placez le zip/exe dans offline\"

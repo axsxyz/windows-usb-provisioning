@@ -80,8 +80,8 @@ function Import-ProvConfig {
         CameraClientInstalledPaths    = @()
         CameraClientProgramDirPattern = ""
         CameraClientExeNamePattern    = ""
-        CameraClientClassicUrl        = ""
-        CameraClientClassicVersion    = ""
+        CameraClientArchiveUrl        = ""
+        CameraClientArchiveVersion    = ""
         CameraClientCacheZipFormat    = ""
         CameraClientDownloadZipFormat = ""
     }
