@@ -1,0 +1,39 @@
+# Real organisation values: never commit
+config.local.psd1
+*.local.md
+
+# Run output (reports, logs, inventories, exports)
+reports/*
+!reports/README.txt
+!reports/.gitkeep
+*.log
+install-log-*.txt
+rapport-*.txt
+inventaire-*.csv
+*-deploy-state.json
+*-migration.json
+migrationWin11_*/
+*chrome-passwords*.csv
+*chrome-bookmarks*.html
+*chrome-bookmarks*.json
+
+# Offline payloads (installers, drivers, business apps): USB stick only
+offline/*
+!offline/README.txt
+!offline/printers/
+offline/printers/*
+!offline/printers/SOURCE.txt
+*.exe
+*.msi
+*.zip
+*.7z
+*.lnk
+*.appref-ms
+*.ppkg
+*.jar
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+.DS_Store
+._*

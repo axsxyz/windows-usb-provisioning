@@ -1,0 +1,18 @@
+Printer drivers (offline pack)
+==============================
+
+Put your printer vendor's Windows driver package here, unpacked, so that the
+.inf files are reachable, for example:
+
+  offline\printers\<DriverFolder>\*.inf
+
+deploy-apps.ps1 (Install-ProvOfflinePrinterDrivers) stages every .inf found in
+the folders listed in PrinterDriverFolders (config.local.psd1) with
+  pnputil /add-driver <file>.inf /install
+then runs Add-PrinterDriver for each name in PrinterDriverNames, before any
+Add-Printer. Use the exact Windows driver name shown in the vendor's INF.
+
+Record here, or in config.local.psd1 comments, where each package came from
+(vendor support page, file name, version). Installer .exe files are not
+committed (.gitignore). Do not run the vendor's interactive Setup.exe during
+the deploy.
